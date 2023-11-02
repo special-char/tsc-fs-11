@@ -2,3 +2,5 @@ Learn fast forward merge
 
 see how to merge using fast forward technique
 
+test
+

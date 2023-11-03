@@ -1,1 +1,11 @@
+<<<<<<< HEAD
 hello world 
+=======
+added new file
+new added file
+hello karan
+
+some msg added in karan
+heloo karangit 
+hello karan 1
+>>>>>>> a9516083d521f7a8a03033880ba2ffbbc034ad22

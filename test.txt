@@ -2,4 +2,10 @@ hello world
 
 how are you?
 
+<<<<<<< HEAD
 i m fine
+=======
+i m fine 
+hello new 
+hello two
+>>>>>>> 7cf90c7 (two)

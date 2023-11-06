@@ -5,4 +5,10 @@ how are you?
 i m fine
 i m fine
 i m fine
+<<<<<<< HEAD
 hey how are you
+=======
+i am fine
+hey 
+hiw
+>>>>>>> squachk

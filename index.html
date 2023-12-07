@@ -1,144 +1,259 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <!-- most imp -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- 80 characters -->
-    <title>Document</title> 
+    <title>Document</title>
     <!-- 180 characters -->
-    <meta name="description" content="">
+    <meta name="description" content="" />
 
-    <meta name="keywords" content="fullstack, html5, css3">
+    <meta name="keywords" content="fullstack, html5, css3" />
 
     <meta property="og:title" content="The Rock" />
     <meta property="og:type" content="video.movie" />
     <meta property="og:url" content="https://www.imdb.com/title/tt0117500/" />
-    <meta property="og:image" content="https://ik.imagekit.io/mdzi40eohii/tsc/Website_Image_3_f93a1f01c6_s07mb85_UT_c8704c80ed_3sCDOMvJH.jpg" />
+    <meta
+      property="og:image"
+      content="https://ik.imagekit.io/mdzi40eohii/tsc/Website_Image_3_f93a1f01c6_s07mb85_UT_c8704c80ed_3sCDOMvJH.jpg"
+    />
 
-
-    
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MMHFNWQC');</script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-MMHFNWQC");
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@nytimesbits" />
-<meta name="twitter:creator" content="@nickbilton" />
-<meta property="og:url" content="http://bits.blogs.nytimes.com/2011/12/08/a-twitter-for-my-sister/" />
-<meta property="og:title" content="A Twitter for My Sister" />
-<meta property="og:description" content="In the early days, Twitter grew so quickly that it was almost impossible to add new features because engineers spent their time trying to keep the rocket ship from stalling." />
-<meta property="og:image" content="http://graphics8.nytimes.com/images/2011/12/08/technology/bits-newtwitter/bits-newtwitter-tmagArticle.jpg" />
+    <meta name="twitter:site" content="@nytimesbits" />
+    <meta name="twitter:creator" content="@nickbilton" />
+    <meta
+      property="og:url"
+      content="http://bits.blogs.nytimes.com/2011/12/08/a-twitter-for-my-sister/"
+    />
+    <meta property="og:title" content="A Twitter for My Sister" />
+    <meta
+      property="og:description"
+      content="In the early days, Twitter grew so quickly that it was almost impossible to add new features because engineers spent their time trying to keep the rocket ship from stalling."
+    />
+    <meta
+      property="og:image"
+      content="http://graphics8.nytimes.com/images/2011/12/08/technology/bits-newtwitter/bits-newtwitter-tmagArticle.jpg"
+    />
 
-<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
-<link rel="manifest" href="/assets/site.webmanifest">
-<link rel="mask-icon" href="/assets/safari-pinned-tab.svg" color="#5bbad5">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
-<!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
-    <link rel="icon" href="/assets/home.svg" type="image/svg+xml">
-</head>
-<body>
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/assets/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/assets/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/assets/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/assets/site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="/assets/safari-pinned-tab.svg"
+      color="#5bbad5"
+    />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> -->
+    <link rel="icon" href="/assets/home.svg" type="image/svg+xml" />
 
-    <a href="mailto:yagnesh.modh@gmail.com">yagnesh.modh@gmail.com</a>
-    <a href="tel:+918690090417">+91 86900 90417</a>
-    <a href="skype:+918690090417">+91 86900 90417</a>
-    <a href="wa:+918690090417">+91 86900 90417</a>
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
 
-    <header>
-        <ul>
-            <li>
-                <a href="#home">Home</a>
-            </li>
-            <li>
-                <a href="#about">About</a>
-            </li>
-            <li>
-                <a href="#courses">Cources</a>
-            </li>
-            <li>
-                <a href="#contact">Contact</a>
-            </li>
-        </ul>
-    </header>
-    <aside>
-
-    </aside>
-    <aside>
-        
-        <footer>
-
-        </footer>
-    </aside>
-    <main>
-        <section></section>
-        <section></section>
-        <section></section>
-        <section></section>
-
-        <time>
-
-        </time>
-
-        <address>
-            
-        </address>
-    </main>
-
-
-        <div>
-            <label style="position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;" for="name">Name</label>
-        <input type="tel" id="name" required>
-    </div>
-
-
-            
     
+  </head>
+  <body>
+    <!-- <video style="aspect-ratio: 9 / 16; width: 100;" name="bannerVideo" id="bannerVideo">
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm" />
 
+      <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+    
+      Download the
+      <a href="/media/cc0-videos/flower.webm">WEBM</a>
+      or
+      <a href="/media/cc0-videos/flower.mp4">MP4</a>
+      video.
+    </video>
 
+    <button type="button" onclick="bannerVideo.play()">Play</button>
+    <button type="button" onclick="bannerVideo.pause()">Pause</button> -->
 
+    <!-- <audio controls src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3">
+      <a href="/media/cc0-audio/t-rex-roar.mp3"> Download audio </a>
+    </audio> -->
+    <!-- <img src="./assets/banner@1x.jpg" style="width: 100vw; aspect-ratio: 16/9;" alt=""> -->
 
+    <!-- <div class="test">
 
-    <div id="home" style="height: 100vh; background-color: coral;">
-        <h1>Home</h1>
-    </div>
-    <div id="about" style="height: 100vh; background-color: gold;">
-        <h1>about</h1>
-    </div>
-    <div id="courses" style="height: 100vh; background-color: purple;">
-        <h1>courses</h1>
-    </div>
-    <div id="contact" style="height: 100vh; background-color: dodgerblue;">
-        <h1>contact</h1>
-    </div>
+    </div> -->
 
-    <!--  -->
+    <!-- <picture>
+      <source srcset="./assets/banner@3x.jpg" media="(min-width: 1024px)"  />
+      <source srcset="./assets/banner@2x.jpg" media="(min-width: 768px)"  />
+      <img src="./assets/banner@1x.jpg" style="width: 100vw; aspect-ratio: 16/9;" alt="banner" />
+    </picture> -->
 
-    <strong></strong>
-    <em></em>
+    <!-- 
+    <picture>
+      <source srcset="./assets/banner@1x.avif" type="image/avif"  />
+      <source srcset="./assets/banner@1x.webp" type="image/webp"  />
+      <img src="./assets/banner@1x.jpg" style="width: 100vw; aspect-ratio: 16/9;" alt="banner" />
+    </picture> -->
 
+    <!-- <picture>
+      <source srcset="./assets/banner@3x.jpg, ./assets/banner@2x.jpg 2x" />
+      <img src="./assets/banner@1x.jpg" style="width: 100vw; aspect-ratio: 16/9;" alt="banner" />
+    </picture> -->
 
-    <img src="./assets/home.png" height="500" width="500" alt="">
+    <h1 id="heading">Lorem, ipsum.</h1>
 
-    <svg xmlns="http://www.w3.org/2000/svg" height="500" viewBox="0 -960 960 960" width="500" fill="red"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
-    <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MMHFNWQC"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-</body>
+    <h1 style="color: blue;">Lorem ipsum dolor sit amet.</h1>
+
+    <button type="menu">submit</button>
+
+    <textarea name="feedback" id="feedback" cols="30" rows="10"></textarea>
+
+    <p>
+      Lorem, ipsum dolor sit amet consectetur <i>adipisicing</i> elit.
+      <strong>Explicabo</strong> in sunt sit <mark>pariatur</mark>, qui sapiente
+      debitis ut expedita magni quam numquam eum deserunt ducimus maiores.
+      Veritatis assumenda inventore unde id!
+    </p>
+
+    <input type="button" />
+    <dialog open modal-mode="mini">
+      <form method="dialog"></form>
+    </dialog>
+
+    <form
+      oninput="range.value = email.value === '' ? 20 : 0 + name.value === '' ? 20 : 0;  "
+    >
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name" autocomplete="name" required />
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          autocomplete="email"
+          required
+          pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+        />
+      </div>
+
+      <div>
+        <label for="email">Email</label>
+        <input
+          type="password"
+          id="email"
+          autocomplete="one-time-code"
+          required
+        />
+      </div>
+
+      <div>
+        <label for="search">Search</label>
+        <input type="search" id="search" required />
+      </div>
+
+      <div>
+        <label for="gender">Gender</label>
+        <select name="gender" id="gender" autocomplete="sex">
+          <option value="">Please Select college</option>
+          <option value="male">male</option>
+          <option value="female">female</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="hobbies">Hobbies</label>
+        <select name="hobbies" id="hobbies" multiple>
+          <option value="">Please Select college</option>
+          <optgroup label="Sports">
+            <option value="cricket">cricket</option>
+            <option value="football">football</option>
+          </optgroup>
+          <optgroup label="Activity">
+            <option value="dancing">dancing</option>
+            <option value="singing">singing</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <fieldset>
+        <legend>Gender</legend>
+        <div>
+          <input type="radio" name="gender" id="male" />
+          <label for="male">Male</label>
+        </div>
+        <div>
+          <input type="radio" name="gender" id="female" />
+          <label for="female">Female</label>
+        </div>
+      </fieldset>
+
+      <div>
+        <label for="college">College</label>
+        <input type="text" id="college" list="college-list" />
+        <datalist id="college-list">
+          <option>LDRP</option>
+          <option>NIRMA</option>
+        </datalist>
+      </div>
+
+      <div>
+        <label for="age">Age</label>
+        <input type="range" name="age" id="age" min="0" max="100" value="20" />
+        <output name="ageResult" for="age">20</output>
+      </div>
+
+      <div>
+        <progress min="0" max="100" value="20"></progress>
+      </div>
+
+      <div>
+        <meter
+          id="range"
+          name="range"
+          min="0"
+          max="100"
+          value="80"
+          low="33"
+          high="66"
+          optimum="80"
+        ></meter>
+      </div>
+
+      <!-- yagnesh modh -->
+      <!-- 1abc -->
+
+      <button type="submit">Submit</button>
+
+      <button type="reset">Reset</button>
+    </form>
+  </body>
 </html>

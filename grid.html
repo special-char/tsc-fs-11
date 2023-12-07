@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+    <style>
+        .wrapper {
+            display: grid;
+            grid-template: "logo menu menu" 64px
+                            "banner banner panel" 1fr
+                            "banner  banner panel" 1fr
+                             "title description panel" 1fr
+                             "task1 task2 task3" 1fr / 1fr 2fr 1fr; 
+            gap: 10px;
+            height: 100vh;
+        }
+
+        .wrapper > .box {
+            background-color: red;
+        }
+
+        .wrapper > .box:nth-child(1) {
+            grid-area: logo;
+        }
+
+        .wrapper > .box:nth-child(2) {
+            grid-area: menu;
+        }
+
+        .wrapper > .box:nth-child(3) {
+            grid-area: banner;
+        }
+
+        .wrapper > .box:nth-child(4) {
+            grid-area: title;
+        }
+
+        .wrapper > .box:nth-child(5) {
+            grid-area: description;
+        }
+
+        .wrapper > .box:nth-child(6) {
+            grid-area: panel;
+        }
+        .wrapper > .box:nth-child(7) {
+            grid-area: task1;
+        }
+        .wrapper > .box:nth-child(8) {
+            grid-area: task2;
+        }
+        .wrapper > .box:nth-child(9) {
+            grid-area: task3;
+        }
+
+        /* .box {
+            background-color: red;
+        }
+
+        .box:nth-child(2) {
+            grid-column: span 2;
+        }
+
+        .box:nth-child(3) {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .box:nth-child(4) {
+            grid-column: 1 / 2;
+            grid-row: 4 / 5;
+        }
+
+        .box:nth-child(5) {
+            grid-column: 2 / 3;
+            grid-row: 4 / 5;
+        }
+
+        .box:nth-child(6) {
+            grid-row: span 3;
+        } */
+    </style>
+</head>
+<body>
+    
+    <div class="wrapper">
+        <div class="box">logo</div>
+        <div class="box">menu</div>
+        <div class="box">banner</div>
+        <div class="box">title</div>
+        <div class="box">description</div>
+        <div class="box">panel</div>
+        <div class="box">task1</div>
+        <div class="box">task2</div>
+        <div class="box">task3</div>
+    </div>
+
+    <!-- <div>
+        <div>left</div>
+        <div>
+            <div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div> -->
+</body>
+</html>

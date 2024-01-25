@@ -23,16 +23,21 @@
     }),
 ````
 
-- webpack setup for css install `npm i -D css-loader style-loader` and add rule as follow ```javascript
+- webpack setup for css install `npm i -D css-loader style-loader` and add rule as follow
+
+```javascript
   {
   test: /\.css$/,
   exclude: /node_modules/,
   use: ['style-loader', 'css-loader'],
   },
 
-````
-- if you want to add post-css (if you want to use tailwind then follow this step) then install ```javascript
+```
+
+- if you want to add post-css (if you want to use tailwind then follow this step) then install
+
+```javascript
 npm install --save-dev postcss-loader postcss
-````
+```
 
 - follow instation steps from [postcss](https://github.com/webpack-contrib/postcss-loader)

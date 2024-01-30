@@ -20,5 +20,8 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  rules: {},
+  plugins: ['html'],
+  rules: {
+    'import/no-extraneous-dependencies': 0,
+  },
 };

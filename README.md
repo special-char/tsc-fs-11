@@ -99,3 +99,14 @@ devServer: {
 - .gitignore
 - .eslintignore
 - .prettierignore
+
+- remove everything from html(black body section)
+- add code in index.js from [react website](https://react.dev/learn/add-react-to-an-existing-project)
+- add preset rule in babel using `npm i -D @babel/preset-react`
+  now your preset look like following
+
+  ```json
+  {
+    "presets": ["@babel/preset-env", "@babel/preset-react"]
+  }
+  ```

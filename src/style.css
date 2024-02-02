@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .badge {
+    @apply absolute -top-2 right-0 -rotate-90 px-4 py-2 rounded-full;
+
+    &--red {
+      @apply bg-red-300;
+    }
+
+    &--green {
+      @apply bg-green-300;
+    }
+  }
+  .btn {
+  }
+
+  .card {
+    @apply flex flex-col gap-4 items-center justify-center max-w-48 aspect-4/3 md:aspect-3/4 rounded-2xl relative my-6;
+  }
+}

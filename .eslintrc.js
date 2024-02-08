@@ -23,5 +23,6 @@ module.exports = {
   plugins: ['html'],
   rules: {
     'import/no-extraneous-dependencies': 0,
+    'react/state-in-constructor': 0,
   },
 };

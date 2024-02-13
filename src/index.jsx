@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './style.css';
@@ -11,38 +11,6 @@ import ProductDetails from './pages/productDetails';
 // Clear the existing HTML content
 document.body.innerHTML = '<div id="app"></div>';
 
-Home.getDerivedStateFromProps = (props, state) => {
-  console.log('getDerivedStateFromProps');
-  console.log(document.getElementById('title'));
-  return {
-    greet: `Hello from ${props.title}`,
-  };
-};
-
-class Test extends Component {
-  state = {
-    title: 'Home Page',
-  };
-
-  render() {
-    const { title } = this.state;
-    return (
-      <>
-        {/* <Home title={title} desc="home page description" />
-        
-        new Home({title: title, desc: "" })*/}
-        <p>{title}</p>
-        <button
-          type="button"
-          onClick={() => this.setState({ title: 'About Page' })}
-        >
-          Change Title
-        </button>
-      </>
-    );
-  }
-}
-
 const router = createBrowserRouter([
   {
     path: '/',
@@ -50,7 +18,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Test />,
+        element: <Home />,
       },
       {
         path: 'products',

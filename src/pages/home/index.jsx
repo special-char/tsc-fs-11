@@ -1,218 +1,125 @@
 import React, { Component } from 'react';
-
-// Mounting
-// -> Constructor
-
-// Updating
-
-// Unmounting
-
-// Error
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 export default class Home extends Component {
-  // derive state based on props
-  // bind method
-  // analytics
-  constructor(props) {
-    super(props);
-    console.log('constructor');
+  state = {
+    todoText: '',
+    todoList: [],
+  };
 
-    this.state = {
-      count: 0,
-      name: 'yagnesh',
-      data: null,
-      // greet: `Hello from ${props.title}`,
-    };
+  changeText = event => {
+    console.log(event.target.value);
+    this.setState({ todoText: event.target.value });
+  };
 
-    console.log(document.getElementById('title'));
-    // this.increment = this.increment.bind(this);
-  }
+  addTodo = event => {
+    event.preventDefault();
+    this.setState(({ todoText, todoList }) => ({
+      todoList: [
+        ...todoList,
+        { id: new Date().valueOf(), text: todoText, isDone: false },
+      ],
+      todoText: '',
+    }));
+  };
 
-  // static getDerivedStateFromProps(props, state) {
-  //   console.log('getDerivedStateFromProps');
-  //   console.log(document.getElementById('title'));
-  //   return {
-  //     greet: `Hello from ${props.title}`,
-  //   };
-  // }
-
-  async componentDidMount() {
-    document.addEventListener('copy', () => {
-      console.log('coppied');
+  toggleComplete = item => {
+    console.log('toggleComplete');
+    this.setState(({ todoList }) => {
+      const index = todoList.findIndex(x => x.id === item.id);
+      return {
+        todoList: [
+          ...todoList.slice(0, index),
+          { ...item, isDone: !item.isDone },
+          ...todoList.slice(index + 1),
+        ],
+      };
     });
-
-    try {
-      const res = await fetch('https://fakestoreapi.com/products/1');
-      const json = await res.json();
-      this.setState({ data: json });
-    } catch (error) {}
-  }
-
-  descrement = () => {
-    this.setState(({ count }) => ({ count: count - 1 }));
   };
 
-  changeName = () => {
-    this.setState({ name: 'Virat' }, () => {});
-  };
-
-  increment = () => {
-    this.setState(
-      ({ count }) => ({ count: count + 1 }),
-      () => {
-        console.log(this.state.count);
-      },
-    );
+  deleteTodo = item => {
+    this.setState(({ todoList }) => {
+      const index = todoList.findIndex(x => x.id === item.id);
+      return {
+        todoList: [...todoList.slice(0, index), ...todoList.slice(index + 1)],
+      };
+    });
   };
 
   render() {
-    console.log('render');
-    const { name, count, greet, data } = this.state;
-    console.log(document.getElementById('title'));
-    // const { title } = this.props;
-
-    // if (count > 3) {
-    //   throw new Error('hello');
-    // }
+    const { todoText, todoList } = this.state;
 
     return (
-      <div>
-        <h1 id="title">{greet}</h1>
-        {data && <h2>{data.title}</h2>}
-
-        <button
-          type="button"
-          onClick={() => {
-            this.setState((state, props) => ({
-              greet: `Bounjour from ${props.title}`,
-            }));
-          }}
+      <div className="flex flex-col items-center gap-4 h-screen">
+        <h1>Todo App</h1>
+        <form
+          onSubmit={this.addTodo}
+          className="flex w-full max-w-sm items-center"
         >
-          Greet Me
-        </button>
-        <div className="flex items-center my-10">
-          <button
-            type="button"
-            className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-            onClick={this.increment}
-          >
-            +
-          </button>
-          <p className="px-10 text-4xl font-bold">{count}</p>
-          <button
-            type="button"
-            className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-            onClick={this.descrement}
-          >
-            -
-          </button>
+          <Input
+            className="rounded-r-none"
+            value={todoText}
+            onChange={this.changeText}
+            required
+          />
+          <Button type="submit" className="rounded-l-none">
+            Button
+          </Button>
+        </form>
+        <div className="flex flex-col gap-6 w-full p-6 flex-1">
+          {todoList.map(item => (
+            <div key={item.id} className="flex items-center">
+              <Checkbox
+                checked={item.isDone}
+                onCheckedChange={() => this.toggleComplete(item)}
+              />
+              <p className="flex-1 px-4">{item.text}</p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button>Delete</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Are you sure you want to delete?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete
+                      your account and remove your data from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => this.deleteTodo(item)}>
+                      Confirm
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          ))}
         </div>
-        {count < 5 && (
-          <div className="flex items-center">
-            <p className="px-10 text-4xl font-bold">{name}</p>
-            <button
-              type="button"
-              className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-              onClick={this.changeName}
-            >
-              Change Name
-            </button>
-          </div>
-        )}
+        <div className="flex w-full">
+          <Button className="flex-1 rounded-none" variant="destructive">
+            All
+          </Button>
+          <Button className="flex-1 rounded-none">Pending</Button>
+          <Button className="flex-1 rounded-none">Completed</Button>
+        </div>
       </div>
     );
   }
 }
-
-// import React, { Component } from 'react';
-
-// import Banner from '../../containers/Banner';
-// import Categories from '../../containers/Categories';
-// import TopSales from '../../containers/TopSales';
-// import ProductsDivider from '../../containers/ProductsDivider';
-// import Blogs from '../../containers/Blogs';
-// import JoinUs from '../../containers/JoinUs';
-
-// class Home extends Component {
-//   // state = {
-//   //   count: 0,
-//   // };
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       count: 0,
-//       name: 'Yagnesh',
-//     };
-//   }
-
-//   render() {
-//     const { name, count } = this.state;
-
-//     return (
-//       <>
-//         <div className="flex items-center my-10">
-//           <button
-//             type="button"
-//             className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-//             onClick={() => {
-//               // this.state.count += 1;
-//               // this.setState({ count: 5 });
-//               this.setState((state, props) => ({
-//                 count: state.count + 1,
-//               }));
-//             }}
-//           >
-//             +
-//           </button>
-//           <p className="px-10 text-4xl font-bold">{count}</p>
-//           <button
-//             type="button"
-//             className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-//           >
-//             -
-//           </button>
-//         </div>
-
-//         <div className="flex items-center">
-//           <p className="px-10 text-4xl font-bold">{name}</p>
-//           <button
-//             type="button"
-//             className="bg-red-400 text-4xl font-bold px-8 py-4 rounded-md text-white"
-//             onClick={() => {
-//               this.setState({ name: 'virat' });
-//             }}
-//           >
-//             Change Name
-//           </button>
-//         </div>
-//       </>
-//     );
-//   }
-// }
-
-// // function Home() {
-// //   return (
-// //     <div>
-// //       <button
-// //         type="button"
-// //         className="text-3xl font-bold"
-// //         onClick={() => {
-// //           count += 1;
-// //           console.log(count);
-// //         }}
-// //       >
-// //         {count}
-// //       </button>
-
-// //       <Banner />
-// //       <Categories />
-// //       <TopSales />
-// //       <ProductsDivider />
-// //       <Blogs />
-// //       <JoinUs />
-// //     </div>
-// //   );
-// // }
-
-// export default Home;

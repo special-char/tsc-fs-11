@@ -4,7 +4,17 @@ module.exports = {
     es2021: true,
   },
   parser: '@babel/eslint-parser',
-  extends: ['airbnb', 'prettier'],
+  extends: [
+    'airbnb',
+    'prettier',
+    'plugin:import/errors',
+    'plugin:import/warnings',
+  ],
+  settings: {
+    'import/resolver': {
+      'babel-module': {},
+    },
+  },
   overrides: [
     {
       env: {

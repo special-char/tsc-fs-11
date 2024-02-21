@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from '../ui/checkbox';
-import ConfirmDelete from '../confitmDelete';
+import ConfirmDelete from '../confirmDelete';
 
 function TodoListItem({ item, toggleComplete, deleteTodo }) {
   console.log('render todo Item');

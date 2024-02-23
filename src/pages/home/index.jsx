@@ -8,13 +8,19 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import ConfirmDelete from '@/components/confirmDelete';
 
+const perPageItem = 5;
+
 export default class Home extends Component {
   state = {
     todoList: [],
     filterType: 'all',
+    editMode: 0,
+    page: 1,
   };
 
   inputRef = createRef();
+
+  editRef = createRef();
 
   async componentDidMount() {
     this.loadTodo();
@@ -58,14 +64,11 @@ export default class Home extends Component {
     } catch (error) {}
   };
 
-  toggleComplete = async item => {
+  editTodo = async item => {
     try {
       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'PUT',
-        body: JSON.stringify({
-          ...item,
-          isDone: !item.isDone,
-        }),
+        body: JSON.stringify(item),
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -82,6 +85,7 @@ export default class Home extends Component {
             json,
             ...todoList.slice(index + 1),
           ],
+          editMode: 0,
         };
       });
     } catch (error) {}
@@ -107,7 +111,7 @@ export default class Home extends Component {
   };
 
   render() {
-    const { todoList, filterType } = this.state;
+    const { todoList, filterType, editMode, page } = this.state;
 
     return (
       <div className="flex flex-col items-center gap-4 h-screen">
@@ -122,29 +126,78 @@ export default class Home extends Component {
           </Button>
         </form>
         <div className="flex flex-col gap-6 w-full p-6 flex-1">
-          {todoList.map(x => {
-            if (
-              filterType === 'all' ||
-              (filterType === 'pending' && x.isDone === false) ||
-              (filterType === 'completed' && x.isDone === true)
-            ) {
-              return (
-                <div key={x.id} className="flex items-center">
-                  <Checkbox
-                    checked={x.isDone}
-                    onCheckedChange={() => this.toggleComplete(x)}
-                  />
-                  <p
-                    className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}
-                  >
-                    {x.text}
-                  </p>
-                  <ConfirmDelete onClick={() => this.deleteTodo(x)} />
-                </div>
-              );
-            }
-            return null;
-          })}
+          {todoList
+            .slice((page - 1) * perPageItem, page * perPageItem)
+            .map(x => {
+              if (
+                filterType === 'all' ||
+                (filterType === 'pending' && x.isDone === false) ||
+                (filterType === 'completed' && x.isDone === true)
+              ) {
+                return (
+                  <div key={x.id} className="flex items-center">
+                    <Checkbox
+                      checked={x.isDone}
+                      onCheckedChange={() =>
+                        this.editTodo({ ...x, isDone: !x.isDone })
+                      }
+                    />
+                    {editMode === x.id ? (
+                      <form
+                        className="flex-1 mx-4 flex gap-4"
+                        onSubmit={() =>
+                          this.editTodo({
+                            ...x,
+                            text: this.editRef.current.value,
+                          })
+                        }
+                      >
+                        <Input className="flex-1" ref={this.editRef} />
+                        <Button
+                          type="submit"
+                          className="mx-4"
+                          onClick={() => this.setState({ editMode: x.id })}
+                        >
+                          Submit
+                        </Button>
+                      </form>
+                    ) : (
+                      <p
+                        className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}
+                      >
+                        {x.text}
+                      </p>
+                    )}
+
+                    <Button
+                      type="button"
+                      className="mx-4"
+                      onClick={() =>
+                        this.setState({ editMode: x.id }, () => {
+                          this.editRef.current.value = x.text;
+                        })
+                      }
+                    >
+                      Edit
+                    </Button>
+                    <ConfirmDelete onClick={() => this.deleteTodo(x)} />
+                  </div>
+                );
+              }
+              return null;
+            })}
+          <Button
+            onClick={() => this.setState(({ page }) => ({ page: page + 1 }))}
+            disabled={page >= Math.ceil(todoList.length / perPageItem)}
+          >
+            Next
+          </Button>
+          <Button
+            onClick={() => this.setState(({ page }) => ({ page: page - 1 }))}
+            disabled={page <= 1}
+          >
+            Previous
+          </Button>
         </div>
         <div className="flex w-full">
           <Button

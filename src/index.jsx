@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { Toaster } from '@/components/ui/sonner';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './style.css';
 import Home from './pages/home';
@@ -39,4 +40,8 @@ const router = createBrowserRouter([
 ]);
 
 const root = createRoot(document.getElementById('app'));
-root.render(<RouterProvider router={router} />);
+root.render(
+  <>
+    <RouterProvider router={router} />
+  </>,
+);

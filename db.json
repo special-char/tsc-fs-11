@@ -1,74 +1,9 @@
 {
   "todoList": [
     {
-      "id": "9236",
-      "text": "asdfadsfasdfdasf asdfadsf",
-      "isDone": false
-    },
-    {
-      "id": "af51",
-      "text": "asdfdas",
+      "id": "f5d7",
+      "text": "adfasfdasfafdsfa",
       "isDone": true
-    },
-    {
-      "id": "6613",
-      "text": "fasdf asdfadsf",
-      "isDone": true
-    },
-    {
-      "id": "2cf7",
-      "text": "fasdf",
-      "isDone": false
-    },
-    {
-      "id": "d3f4",
-      "text": "asdfadsfasdfds asdfadsfadsf asdfadsfadsf",
-      "isDone": true
-    },
-    {
-      "id": "54aa",
-      "text": "asdfadsf",
-      "isDone": false
-    },
-    {
-      "id": "7059",
-      "text": "adfasdf",
-      "isDone": false
-    },
-    {
-      "id": "2700",
-      "text": "asdfasf",
-      "isDone": false
-    },
-    {
-      "id": "b2f4",
-      "text": "asdfdasf",
-      "isDone": false
-    },
-    {
-      "id": "970d",
-      "text": "sadfasdf",
-      "isDone": false
-    },
-    {
-      "id": "3710",
-      "text": "asdf",
-      "isDone": false
-    },
-    {
-      "id": "e37c",
-      "text": "asdfasdf",
-      "isDone": false
-    },
-    {
-      "id": "02c8",
-      "text": "asdfasdf",
-      "isDone": false
-    },
-    {
-      "id": "d558",
-      "text": "asdfasdf",
-      "isDone": false
     }
   ]
 }

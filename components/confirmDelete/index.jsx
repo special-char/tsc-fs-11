@@ -11,14 +11,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../ui/alert-dialog';
-import { Button } from '../ui/button';
 
-function ConfirmDelete({ onClick }) {
+function ConfirmDelete({ onClick, children }) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button>Delete</Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
@@ -38,6 +35,7 @@ function ConfirmDelete({ onClick }) {
 
 ConfirmDelete.propTypes = {
   onClick: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default memo(ConfirmDelete);

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import ConfirmDelete from '@/components/confirmDelete';
 import { Toaster } from '@/components/ui/toaster';
+import { ReloadIcon } from '@radix-ui/react-icons';
+import { Button as BorderButton } from '@/components/ui/moving-border';
 
 const perPageItem = 5;
 
@@ -14,6 +16,7 @@ export default class Home extends Component {
     editMode: 0,
     page: 1,
     totalPages: 0,
+    apiStatus: [],
   };
 
   inputRef = createRef();
@@ -24,8 +27,39 @@ export default class Home extends Component {
     this.loadTodo(1, 'all');
   }
 
+  loadingAction = (action, id = -1) => {
+    this.setState(({ apiStatus }) => ({
+      apiStatus: [
+        ...apiStatus,
+        {
+          id,
+          action,
+          status: 'loading',
+        },
+      ],
+    }));
+  };
+
+  errorAction = (id, action, message) => {
+    this.setState(({ apiStatus }) => ({
+      apiStatus: apiStatus.map(x =>
+        (x.action === action, x.id === id)
+          ? { ...x, status: 'error', message }
+          : x,
+      ),
+    }));
+  };
+
+  successAction = (id, action) => {
+    this.setState(({ apiStatus }) => ({
+      apiStatus: apiStatus.filter(x => !(x.action === action && x.id === id)),
+    }));
+  };
+
   loadTodo = async (currentPage, filterType = 'all') => {
+    const action = 'LOAD_TODO';
     try {
+      this.loadingAction(action);
       let url = `http://localhost:3000/todoList?_page=${currentPage}&_per_page=${perPageItem}`;
 
       if (filterType !== 'all') {
@@ -34,19 +68,24 @@ export default class Home extends Component {
 
       const res = await fetch(url);
       const json = await res.json();
-      this.setState({
+
+      this.setState(({ apiStatus }) => ({
         todoList: json.data,
         totalPages: json.pages,
         page: currentPage,
         filterType,
-      });
+        apiStatus: apiStatus.filter(x => x.action !== action),
+      }));
     } catch (error) {
-      console.error(error);
+      this.errorAction(action, error.message);
     }
   };
 
   addTodo = async e => {
+    const action = 'ADD_TODO';
     try {
+      this.loadingAction(action);
+
       e.preventDefault();
       const input = this.inputRef.current;
 
@@ -65,20 +104,23 @@ export default class Home extends Component {
       const json = await res.json();
 
       this.setState(
-        ({ todoList }) => ({
+        ({ todoList, apiStatus }) => ({
           todoList: [...todoList, json],
+          apiStatus: apiStatus.filter(x => x.action !== action),
         }),
         () => {
           input.value = '';
         },
       );
     } catch (error) {
-      console.error(error);
+      this.errorAction(action, error.message);
     }
   };
 
   editTodo = async item => {
+    const action = 'EDIT_TODO';
     try {
+      this.loadingAction(action, item.id);
       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'PUT',
         body: JSON.stringify(item),
@@ -101,13 +143,16 @@ export default class Home extends Component {
           editMode: 0,
         };
       });
+      this.successAction(item.id, action);
     } catch (error) {
-      console.error(error);
+      this.errorAction(item.id, action, error.message);
     }
   };
 
   deleteTodo = async item => {
+    const action = 'DELETE_TODO';
     try {
+      this.loadingAction(action, item.id);
       await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'DELETE',
       });
@@ -118,13 +163,28 @@ export default class Home extends Component {
           todoList: [...todoList.slice(0, index), ...todoList.slice(index + 1)],
         };
       });
+      this.successAction(item.id, action);
     } catch (error) {
-      console.error(error);
+      this.errorAction(item.id, action, error.message);
     }
   };
 
   render() {
-    const { todoList, filterType, editMode, page, totalPages } = this.state;
+    const { todoList, filterType, editMode, page, totalPages, apiStatus } =
+      this.state;
+
+    console.log(apiStatus);
+
+    const loadTodoAction = apiStatus.find(x => x.action === 'LOAD_TODO');
+    const addTodoAction = apiStatus.find(x => x.action === 'ADD_TODO');
+
+    if (loadTodoAction?.status === 'loading') {
+      return <p>Loading....</p>;
+    }
+
+    if (loadTodoAction?.status === 'error') {
+      return <p>{loadTodoAction.message}</p>;
+    }
 
     return (
       <div className="flex flex-col items-center gap-4 h-screen">
@@ -134,15 +194,31 @@ export default class Home extends Component {
           className="flex w-full max-w-sm items-center"
         >
           <Input ref={this.inputRef} className="rounded-r-none" required />
-          <Button type="submit" className="rounded-l-none">
+          <Button
+            type="submit"
+            className="rounded-l-none"
+            disabled={addTodoAction?.status === 'loading'}
+          >
+            {addTodoAction?.status === 'loading' && (
+              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+            )}
             Button
           </Button>
         </form>
+        {addTodoAction?.status === 'error' && (
+          <p className="text-red-500">{addTodoAction?.message}</p>
+        )}
         <div className="flex flex-col gap-6 w-full p-6 flex-1">
           {todoList.map(x => (
             <div key={x.id} className="flex items-center">
               <Checkbox
                 checked={x.isDone}
+                disabled={apiStatus.some(
+                  y =>
+                    (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+                    y.status === 'loading' &&
+                    y.id === x.id,
+                )}
                 onCheckedChange={() =>
                   this.editTodo({ ...x, isDone: !x.isDone })
                 }
@@ -159,13 +235,14 @@ export default class Home extends Component {
                   }}
                 >
                   <Input className="flex-1" ref={this.editRef} />
-                  <Button
+                  <BorderButton
                     type="submit"
-                    className="mx-4"
+                    borderRadius="1.75rem"
+                    className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
                     onClick={() => this.setState({ editMode: x.id })}
                   >
                     Submit
-                  </Button>
+                  </BorderButton>
                 </form>
               ) : (
                 <p className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}>
@@ -176,6 +253,12 @@ export default class Home extends Component {
               <Button
                 type="button"
                 className="mx-4"
+                disabled={apiStatus.some(
+                  y =>
+                    (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+                    y.status === 'loading' &&
+                    y.id === x.id,
+                )}
                 onClick={() =>
                   this.setState({ editMode: x.id }, () => {
                     this.editRef.current.value = x.text;
@@ -184,7 +267,19 @@ export default class Home extends Component {
               >
                 Edit
               </Button>
-              <ConfirmDelete onClick={() => this.deleteTodo(x)} />
+              <ConfirmDelete onClick={() => this.deleteTodo(x)}>
+                <Button
+                  disabled={apiStatus.some(
+                    y =>
+                      (y.action === 'EDIT_TODO' ||
+                        y.action === 'DELETE_TODO') &&
+                      y.status === 'loading' &&
+                      y.id === x.id,
+                  )}
+                >
+                  Delete
+                </Button>
+              </ConfirmDelete>
             </div>
           ))}
           <Button
@@ -224,6 +319,11 @@ export default class Home extends Component {
             Completed
           </Button>
         </div>
+        {/* {error && (
+          <div className="absolute top-4 right-4 bg-red-400 p-4 rounded-md text-white">
+            {error}
+          </div>
+        )} */}
       </div>
     );
   }

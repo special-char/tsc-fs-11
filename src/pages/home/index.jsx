@@ -485,6 +485,17 @@ function Home() {
     }
   }, [editMode]);
 
+  const loadTodoAction = apiStatus.find(x => x.action === 'LOAD_TODO');
+  const addTodoAction = apiStatus.find(x => x.action === 'ADD_TODO');
+
+  if (loadTodoAction?.status === 'loading') {
+    return <p>Loading....</p>;
+  }
+
+  if (loadTodoAction?.status === 'error') {
+    return <p>{loadTodoAction.message}</p>;
+  }
+
   return (
     <div className="flex flex-col items-center gap-4 h-screen">
       <h1>Todo App</h1>
@@ -493,17 +504,17 @@ function Home() {
         <Button
           type="submit"
           className="rounded-l-none"
-          // disabled={addTodoAction?.status === 'loading'}
+          disabled={addTodoAction?.status === 'loading'}
         >
-          {/* {addTodoAction?.status === 'loading' && (
+          {addTodoAction?.status === 'loading' && (
             <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          )} */}
+          )}
           Button
         </Button>
       </form>
-      {/* {addTodoAction?.status === 'error' && (
+      {addTodoAction?.status === 'error' && (
         <p className="text-red-500">{addTodoAction?.message}</p>
-      )} */}
+      )}
       <div className="flex flex-col gap-6 w-full p-6 flex-1">
         {todoList.map(x => (
           <div key={x.id} className="flex items-center">

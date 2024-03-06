@@ -1,4 +1,10 @@
-import React, { Component, createRef } from 'react';
+import React, {
+  Component,
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -9,90 +15,398 @@ import { Button as BorderButton } from '@/components/ui/moving-border';
 
 const perPageItem = 5;
 
-export default class Home extends Component {
-  state = {
-    todoList: [],
-    filterType: 'all',
-    editMode: 0,
-    page: 1,
-    totalPages: 0,
-    apiStatus: [],
+// export default class Home extends Component {
+//   state = {
+//     todoList: [],
+//     filterType: 'all',
+//     editMode: 0,
+//     page: 1,
+//     totalPages: 0,
+//     apiStatus: [],
+//   };
+
+//   inputRef = createRef();
+
+//   editRef = createRef();
+
+//   async componentDidMount() {
+//     this.loadTodo(1, 'all');
+//   }
+
+//   loadingAction = (action, id = -1) => {
+//     this.setState(({ apiStatus }) => ({
+//       apiStatus: [
+//         ...apiStatus,
+//         {
+//           id,
+//           action,
+//           status: 'loading',
+//         },
+//       ],
+//     }));
+//   };
+
+//   errorAction = (id, action, message) => {
+//     this.setState(({ apiStatus }) => ({
+//       apiStatus: apiStatus.map(x =>
+//         (x.action === action, x.id === id)
+//           ? { ...x, status: 'error', message }
+//           : x,
+//       ),
+//     }));
+//   };
+
+//   successAction = (id, action) => {
+//     this.setState(({ apiStatus }) => ({
+//       apiStatus: apiStatus.filter(x => !(x.action === action && x.id === id)),
+//     }));
+//   };
+
+//   loadTodo = async (currentPage, filterType = 'all') => {
+//     const action = 'LOAD_TODO';
+//     try {
+//       this.loadingAction(action);
+//       let url = `http://localhost:3000/todoList?_page=${currentPage}&_per_page=${perPageItem}`;
+
+//       if (filterType !== 'all') {
+//         url += `&isDone=${filterType === 'completed' ? 1 : 0}`;
+//       }
+
+//       const res = await fetch(url);
+//       const json = await res.json();
+
+//       this.setState(({ apiStatus }) => ({
+//         todoList: json.data,
+//         totalPages: json.pages,
+//         page: currentPage,
+//         filterType,
+//         apiStatus: apiStatus.filter(x => x.action !== action),
+//       }));
+//     } catch (error) {
+//       this.errorAction(action, error.message);
+//     }
+//   };
+
+//   addTodo = async e => {
+//     const action = 'ADD_TODO';
+//     try {
+//       this.loadingAction(action);
+
+//       e.preventDefault();
+//       const input = this.inputRef.current;
+
+//       const res = await fetch('http://localhost:3000/todoList', {
+//         method: 'POST',
+//         body: JSON.stringify({
+//           text: input.value,
+//           isDone: false,
+//         }),
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Accept: 'application/json',
+//         },
+//       });
+
+//       const json = await res.json();
+
+//       this.setState(
+//         ({ todoList, apiStatus }) => ({
+//           todoList: [...todoList, json],
+//           apiStatus: apiStatus.filter(x => x.action !== action),
+//         }),
+//         () => {
+//           input.value = '';
+//         },
+//       );
+//     } catch (error) {
+//       this.errorAction(action, error.message);
+//     }
+//   };
+
+//   editTodo = async item => {
+//     const action = 'EDIT_TODO';
+//     try {
+//       this.loadingAction(action, item.id);
+//       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
+//         method: 'PUT',
+//         body: JSON.stringify(item),
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Accept: 'application/json',
+//         },
+//       });
+
+//       const json = await res.json();
+
+//       this.setState(({ todoList }) => {
+//         const index = todoList.findIndex(x => x.id === item.id);
+//         return {
+//           todoList: [
+//             ...todoList.slice(0, index),
+//             json,
+//             ...todoList.slice(index + 1),
+//           ],
+//           editMode: 0,
+//         };
+//       });
+//       this.successAction(item.id, action);
+//     } catch (error) {
+//       this.errorAction(item.id, action, error.message);
+//     }
+//   };
+
+//   deleteTodo = async item => {
+//     const action = 'DELETE_TODO';
+//     try {
+//       this.loadingAction(action, item.id);
+//       await fetch(`http://localhost:3000/todoList/${item.id}`, {
+//         method: 'DELETE',
+//       });
+
+//       this.setState(({ todoList }) => {
+//         const index = todoList.findIndex(x => x.id === item.id);
+//         return {
+//           todoList: [...todoList.slice(0, index), ...todoList.slice(index + 1)],
+//         };
+//       });
+//       this.successAction(item.id, action);
+//     } catch (error) {
+//       this.errorAction(item.id, action, error.message);
+//     }
+//   };
+
+//   render() {
+//     const { todoList, filterType, editMode, page, totalPages, apiStatus } =
+//       this.state;
+
+//     console.log(apiStatus);
+
+//     const loadTodoAction = apiStatus.find(x => x.action === 'LOAD_TODO');
+//     const addTodoAction = apiStatus.find(x => x.action === 'ADD_TODO');
+
+//     if (loadTodoAction?.status === 'loading') {
+//       return <p>Loading....</p>;
+//     }
+
+//     if (loadTodoAction?.status === 'error') {
+//       return <p>{loadTodoAction.message}</p>;
+//     }
+
+//     return (
+//       <div className="flex flex-col items-center gap-4 h-screen">
+//         <h1>Todo App</h1>
+//         <form
+//           onSubmit={this.addTodo}
+//           className="flex w-full max-w-sm items-center"
+//         >
+//           <Input ref={this.inputRef} className="rounded-r-none" required />
+//           <Button
+//             type="submit"
+//             className="rounded-l-none"
+//             disabled={addTodoAction?.status === 'loading'}
+//           >
+//             {addTodoAction?.status === 'loading' && (
+//               <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+//             )}
+//             Button
+//           </Button>
+//         </form>
+//         {addTodoAction?.status === 'error' && (
+//           <p className="text-red-500">{addTodoAction?.message}</p>
+//         )}
+//         <div className="flex flex-col gap-6 w-full p-6 flex-1">
+//           {todoList.map(x => (
+//             <div key={x.id} className="flex items-center">
+//               <Checkbox
+//                 checked={x.isDone}
+//                 disabled={apiStatus.some(
+//                   y =>
+//                     (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+//                     y.status === 'loading' &&
+//                     y.id === x.id,
+//                 )}
+//                 onCheckedChange={() =>
+//                   this.editTodo({ ...x, isDone: !x.isDone })
+//                 }
+//               />
+//               {editMode === x.id ? (
+//                 <form
+//                   className="flex-1 mx-4 flex gap-4"
+//                   onSubmit={e => {
+//                     e.preventDefault();
+//                     this.editTodo({
+//                       ...x,
+//                       text: this.editRef.current.value,
+//                     });
+//                   }}
+//                 >
+//                   <Input className="flex-1" ref={this.editRef} />
+//                   <BorderButton
+//                     type="submit"
+//                     borderRadius="1.75rem"
+//                     className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+//                     onClick={() => this.setState({ editMode: x.id })}
+//                   >
+//                     Submit
+//                   </BorderButton>
+//                 </form>
+//               ) : (
+//                 <p className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}>
+//                   {x.text}
+//                 </p>
+//               )}
+
+//               <Button
+//                 type="button"
+//                 className="mx-4"
+//                 disabled={apiStatus.some(
+//                   y =>
+//                     (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+//                     y.status === 'loading' &&
+//                     y.id === x.id,
+//                 )}
+//                 onClick={() =>
+//                   this.setState({ editMode: x.id }, () => {
+//                     this.editRef.current.value = x.text;
+//                   })
+//                 }
+//               >
+//                 Edit
+//               </Button>
+//               <ConfirmDelete onClick={() => this.deleteTodo(x)}>
+//                 <Button
+//                   disabled={apiStatus.some(
+//                     y =>
+//                       (y.action === 'EDIT_TODO' ||
+//                         y.action === 'DELETE_TODO') &&
+//                       y.status === 'loading' &&
+//                       y.id === x.id,
+//                   )}
+//                 >
+//                   Delete
+//                 </Button>
+//               </ConfirmDelete>
+//             </div>
+//           ))}
+//           <Button
+//             disabled={page >= totalPages}
+//             onClick={() => this.loadTodo(page + 1, filterType)}
+//           >
+//             Next
+//           </Button>
+//           <Button
+//             onClick={() => this.loadTodo(page - 1, filterType)}
+//             disabled={page <= 1}
+//           >
+//             Previous
+//           </Button>
+//           <Toaster />
+//         </div>
+//         <div className="flex w-full">
+//           <Button
+//             className="flex-1 rounded-none"
+//             variant={filterType === 'all' ? 'destructive' : 'default'}
+//             onClick={() => this.loadTodo(page, 'all')}
+//           >
+//             All
+//           </Button>
+//           <Button
+//             className="flex-1 rounded-none"
+//             variant={filterType === 'pending' ? 'destructive' : 'default'}
+//             onClick={() => this.loadTodo(1, 'pending')}
+//           >
+//             Pending
+//           </Button>
+//           <Button
+//             className="flex-1 rounded-none"
+//             variant={filterType === 'completed' ? 'destructive' : 'default'}
+//             onClick={() => this.loadTodo(1, 'completed')}
+//           >
+//             Completed
+//           </Button>
+//         </div>
+//         {/* {error && (
+//           <div className="absolute top-4 right-4 bg-red-400 p-4 rounded-md text-white">
+//             {error}
+//           </div>
+//         )} */}
+//       </div>
+//     );
+//   }
+// }
+
+function Home() {
+  const [todoList, setTodoList] = useState([]);
+  const [editMode, setEditMode] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [apiStatus, setApiStatus] = useState([]);
+  const inputRef = useRef();
+  const editRef = useRef();
+
+  const loadingAction = (action, id = -1) => {
+    setApiStatus(val => [
+      ...val,
+      {
+        id,
+        action,
+        status: 'loading',
+      },
+    ]);
   };
 
-  inputRef = createRef();
-
-  editRef = createRef();
-
-  async componentDidMount() {
-    this.loadTodo(1, 'all');
-  }
-
-  loadingAction = (action, id = -1) => {
-    this.setState(({ apiStatus }) => ({
-      apiStatus: [
-        ...apiStatus,
-        {
-          id,
-          action,
-          status: 'loading',
-        },
-      ],
-    }));
-  };
-
-  errorAction = (id, action, message) => {
-    this.setState(({ apiStatus }) => ({
-      apiStatus: apiStatus.map(x =>
+  const errorAction = (id, action, message) => {
+    setApiStatus(val =>
+      val.map(x =>
         (x.action === action, x.id === id)
           ? { ...x, status: 'error', message }
           : x,
       ),
-    }));
+    );
   };
 
-  successAction = (id, action) => {
-    this.setState(({ apiStatus }) => ({
-      apiStatus: apiStatus.filter(x => !(x.action === action && x.id === id)),
-    }));
+  const successAction = (id, action) => {
+    setApiStatus(val => val.filter(x => !(x.action === action && x.id === id)));
   };
 
-  loadTodo = async (currentPage, filterType = 'all') => {
+  const loadTodo = async (currentPage, ft = 'all') => {
     const action = 'LOAD_TODO';
     try {
-      this.loadingAction(action);
+      loadingAction(action);
       let url = `http://localhost:3000/todoList?_page=${currentPage}&_per_page=${perPageItem}`;
 
-      if (filterType !== 'all') {
-        url += `&isDone=${filterType === 'completed' ? 1 : 0}`;
+      if (ft !== 'all') {
+        url += `&isDone=${ft === 'completed' ? 1 : 0}`;
       }
 
       const res = await fetch(url);
       const json = await res.json();
 
-      this.setState(({ apiStatus }) => ({
-        todoList: json.data,
-        totalPages: json.pages,
-        page: currentPage,
-        filterType,
-        apiStatus: apiStatus.filter(x => x.action !== action),
-      }));
+      setTodoList(json.data);
+      setTotalPages(json.pages);
+      setPage(currentPage);
+      setFilterType(ft);
+      setApiStatus(val => val.filter(x => x.action !== action));
     } catch (error) {
-      this.errorAction(action, error.message);
+      errorAction(action, error.message);
     }
   };
 
-  addTodo = async e => {
+  const addTodo = async e => {
     const action = 'ADD_TODO';
     try {
-      this.loadingAction(action);
+      loadingAction(action);
 
       e.preventDefault();
-      const input = this.inputRef.current;
+      const input = inputRef.current;
+
+      const text = input.value;
 
       const res = await fetch('http://localhost:3000/todoList', {
         method: 'POST',
         body: JSON.stringify({
-          text: input.value,
+          text,
           isDone: false,
         }),
         headers: {
@@ -103,24 +417,19 @@ export default class Home extends Component {
 
       const json = await res.json();
 
-      this.setState(
-        ({ todoList, apiStatus }) => ({
-          todoList: [...todoList, json],
-          apiStatus: apiStatus.filter(x => x.action !== action),
-        }),
-        () => {
-          input.value = '';
-        },
-      );
+      setTodoList(val => [...val, json]);
+      setApiStatus(val => val.filter(x => x.action !== action));
+
+      input.value = '';
     } catch (error) {
-      this.errorAction(action, error.message);
+      errorAction(action, error.message);
     }
   };
 
-  editTodo = async item => {
+  const editTodo = async item => {
     const action = 'EDIT_TODO';
     try {
-      this.loadingAction(action, item.id);
+      loadingAction(action, item.id);
       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'PUT',
         body: JSON.stringify(item),
@@ -132,199 +441,184 @@ export default class Home extends Component {
 
       const json = await res.json();
 
-      this.setState(({ todoList }) => {
-        const index = todoList.findIndex(x => x.id === item.id);
-        return {
-          todoList: [
-            ...todoList.slice(0, index),
-            json,
-            ...todoList.slice(index + 1),
-          ],
-          editMode: 0,
-        };
+      setTodoList(val => {
+        const index = val.findIndex(x => x.id === item.id);
+        return [...val.slice(0, index), json, ...val.slice(index + 1)];
       });
-      this.successAction(item.id, action);
+
+      setEditMode('');
+
+      successAction(item.id, action);
     } catch (error) {
-      this.errorAction(item.id, action, error.message);
+      errorAction(item.id, action, error.message);
     }
   };
 
-  deleteTodo = async item => {
+  const deleteTodo = async item => {
     const action = 'DELETE_TODO';
     try {
-      this.loadingAction(action, item.id);
+      loadingAction(action, item.id);
       await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'DELETE',
       });
 
-      this.setState(({ todoList }) => {
-        const index = todoList.findIndex(x => x.id === item.id);
-        return {
-          todoList: [...todoList.slice(0, index), ...todoList.slice(index + 1)],
-        };
+      setTodoList(val => {
+        const index = val.findIndex(x => x.id === item.id);
+        return [...val.slice(0, index), ...val.slice(index + 1)];
       });
-      this.successAction(item.id, action);
+
+      successAction(item.id, action);
     } catch (error) {
-      this.errorAction(item.id, action, error.message);
+      errorAction(item.id, action, error.message);
     }
   };
 
-  render() {
-    const { todoList, filterType, editMode, page, totalPages, apiStatus } =
-      this.state;
+  useEffect(() => {
+    loadTodo(1, 'all');
+  }, []);
 
-    console.log(apiStatus);
+  useEffect(() => {
+    if (editMode && editRef.current) {
+      console.log(editMode);
 
-    const loadTodoAction = apiStatus.find(x => x.action === 'LOAD_TODO');
-    const addTodoAction = apiStatus.find(x => x.action === 'ADD_TODO');
-
-    if (loadTodoAction?.status === 'loading') {
-      return <p>Loading....</p>;
+      editRef.current.value = todoList.find(x => x.id === editMode)?.text;
     }
+  }, [editMode]);
 
-    if (loadTodoAction?.status === 'error') {
-      return <p>{loadTodoAction.message}</p>;
-    }
-
-    return (
-      <div className="flex flex-col items-center gap-4 h-screen">
-        <h1>Todo App</h1>
-        <form
-          onSubmit={this.addTodo}
-          className="flex w-full max-w-sm items-center"
+  return (
+    <div className="flex flex-col items-center gap-4 h-screen">
+      <h1>Todo App</h1>
+      <form onSubmit={addTodo} className="flex w-full max-w-sm items-center">
+        <Input ref={inputRef} className="rounded-r-none" required />
+        <Button
+          type="submit"
+          className="rounded-l-none"
+          // disabled={addTodoAction?.status === 'loading'}
         >
-          <Input ref={this.inputRef} className="rounded-r-none" required />
-          <Button
-            type="submit"
-            className="rounded-l-none"
-            disabled={addTodoAction?.status === 'loading'}
-          >
-            {addTodoAction?.status === 'loading' && (
-              <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Button
-          </Button>
-        </form>
-        {addTodoAction?.status === 'error' && (
-          <p className="text-red-500">{addTodoAction?.message}</p>
-        )}
-        <div className="flex flex-col gap-6 w-full p-6 flex-1">
-          {todoList.map(x => (
-            <div key={x.id} className="flex items-center">
-              <Checkbox
-                checked={x.isDone}
-                disabled={apiStatus.some(
-                  y =>
-                    (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
-                    y.status === 'loading' &&
-                    y.id === x.id,
-                )}
-                onCheckedChange={() =>
-                  this.editTodo({ ...x, isDone: !x.isDone })
-                }
-              />
-              {editMode === x.id ? (
-                <form
-                  className="flex-1 mx-4 flex gap-4"
-                  onSubmit={e => {
-                    e.preventDefault();
-                    this.editTodo({
-                      ...x,
-                      text: this.editRef.current.value,
-                    });
-                  }}
-                >
-                  <Input className="flex-1" ref={this.editRef} />
-                  <BorderButton
-                    type="submit"
-                    borderRadius="1.75rem"
-                    className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
-                    onClick={() => this.setState({ editMode: x.id })}
-                  >
-                    Submit
-                  </BorderButton>
-                </form>
-              ) : (
-                <p className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}>
-                  {x.text}
-                </p>
+          {/* {addTodoAction?.status === 'loading' && (
+            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+          )} */}
+          Button
+        </Button>
+      </form>
+      {/* {addTodoAction?.status === 'error' && (
+        <p className="text-red-500">{addTodoAction?.message}</p>
+      )} */}
+      <div className="flex flex-col gap-6 w-full p-6 flex-1">
+        {todoList.map(x => (
+          <div key={x.id} className="flex items-center">
+            <Checkbox
+              checked={x.isDone}
+              disabled={apiStatus.some(
+                y =>
+                  (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+                  y.status === 'loading' &&
+                  y.id === x.id,
               )}
+              onCheckedChange={() => editTodo({ ...x, isDone: !x.isDone })}
+            />
+            {editMode === x.id ? (
+              <form
+                className="flex-1 mx-4 flex gap-4"
+                onSubmit={e => {
+                  e.preventDefault();
+                  editTodo({
+                    ...x,
+                    text: editRef.current.value,
+                  });
+                }}
+              >
+                <Input className="flex-1" ref={editRef} />
+                <BorderButton
+                  type="submit"
+                  borderRadius="1.75rem"
+                  className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
+                  onClick={() => setEditMode(x.id)}
+                >
+                  Submit
+                </BorderButton>
+              </form>
+            ) : (
+              <p className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}>
+                {x.text}
+              </p>
+            )}
 
+            <Button
+              type="button"
+              className="mx-4"
+              disabled={apiStatus.some(
+                y =>
+                  (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
+                  y.status === 'loading' &&
+                  y.id === x.id,
+              )}
+              onClick={() => {
+                setEditMode(x.id);
+                console.log(editRef.current);
+                // editRef.current.value = x.text;
+              }}
+            >
+              Edit
+            </Button>
+            <ConfirmDelete onClick={() => deleteTodo(x)}>
               <Button
-                type="button"
-                className="mx-4"
                 disabled={apiStatus.some(
                   y =>
                     (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
                     y.status === 'loading' &&
                     y.id === x.id,
                 )}
-                onClick={() =>
-                  this.setState({ editMode: x.id }, () => {
-                    this.editRef.current.value = x.text;
-                  })
-                }
               >
-                Edit
+                Delete
               </Button>
-              <ConfirmDelete onClick={() => this.deleteTodo(x)}>
-                <Button
-                  disabled={apiStatus.some(
-                    y =>
-                      (y.action === 'EDIT_TODO' ||
-                        y.action === 'DELETE_TODO') &&
-                      y.status === 'loading' &&
-                      y.id === x.id,
-                  )}
-                >
-                  Delete
-                </Button>
-              </ConfirmDelete>
-            </div>
-          ))}
-          <Button
-            disabled={page >= totalPages}
-            onClick={() => this.loadTodo(page + 1, filterType)}
-          >
-            Next
-          </Button>
-          <Button
-            onClick={() => this.loadTodo(page - 1, filterType)}
-            disabled={page <= 1}
-          >
-            Previous
-          </Button>
-          <Toaster />
-        </div>
-        <div className="flex w-full">
-          <Button
-            className="flex-1 rounded-none"
-            variant={filterType === 'all' ? 'destructive' : 'default'}
-            onClick={() => this.loadTodo(page, 'all')}
-          >
-            All
-          </Button>
-          <Button
-            className="flex-1 rounded-none"
-            variant={filterType === 'pending' ? 'destructive' : 'default'}
-            onClick={() => this.loadTodo(1, 'pending')}
-          >
-            Pending
-          </Button>
-          <Button
-            className="flex-1 rounded-none"
-            variant={filterType === 'completed' ? 'destructive' : 'default'}
-            onClick={() => this.loadTodo(1, 'completed')}
-          >
-            Completed
-          </Button>
-        </div>
-        {/* {error && (
+            </ConfirmDelete>
+          </div>
+        ))}
+        <Button
+          disabled={page >= totalPages}
+          onClick={() => loadTodo(page + 1, filterType)}
+        >
+          Next
+        </Button>
+        <Button
+          onClick={() => loadTodo(page - 1, filterType)}
+          disabled={page <= 1}
+        >
+          Previous
+        </Button>
+        <Toaster />
+      </div>
+      <div className="flex w-full">
+        <Button
+          className="flex-1 rounded-none"
+          variant={filterType === 'all' ? 'destructive' : 'default'}
+          onClick={() => loadTodo(page, 'all')}
+        >
+          All
+        </Button>
+        <Button
+          className="flex-1 rounded-none"
+          variant={filterType === 'pending' ? 'destructive' : 'default'}
+          onClick={() => loadTodo(1, 'pending')}
+        >
+          Pending
+        </Button>
+        <Button
+          className="flex-1 rounded-none"
+          variant={filterType === 'completed' ? 'destructive' : 'default'}
+          onClick={() => loadTodo(1, 'completed')}
+        >
+          Completed
+        </Button>
+      </div>
+      {/* {error && (
           <div className="absolute top-4 right-4 bg-red-400 p-4 rounded-md text-white">
             {error}
           </div>
         )} */}
-      </div>
-    );
-  }
+    </div>
+  );
 }
+
+export default Home;

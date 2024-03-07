@@ -1,11 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import ConfirmDelete from '@/components/confirmDelete';
-import { Toaster } from '@/components/ui/toaster';
-import { ReloadIcon } from '@radix-ui/react-icons';
-import { Button as BorderButton } from '@/components/ui/moving-border';
+import React, {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import TodoForm from './todoForm';
+import TodoFilter from './todoFilter';
+import TodoList from './todoList';
+import Pagination from './pagination';
 
 const perPageItem = 5;
 
@@ -331,43 +335,13 @@ const perPageItem = 5;
 
 function Home() {
   const [todoList, setTodoList] = useState([]);
-  const [editMode, setEditMode] = useState('');
   const [filterType, setFilterType] = useState('all');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [apiStatus, setApiStatus] = useState([]);
   const inputRef = useRef();
-  const editRef = useRef();
 
-  const loadingAction = (action, id = -1) => {
-    setApiStatus(val => [
-      ...val,
-      {
-        id,
-        action,
-        status: 'loading',
-      },
-    ]);
-  };
-
-  const errorAction = (id, action, message) => {
-    setApiStatus(val =>
-      val.map(x =>
-        (x.action === action, x.id === id)
-          ? { ...x, status: 'error', message }
-          : x,
-      ),
-    );
-  };
-
-  const successAction = (id, action) => {
-    setApiStatus(val => val.filter(x => !(x.action === action && x.id === id)));
-  };
-
-  const loadTodo = async (currentPage, ft = 'all') => {
-    const action = 'LOAD_TODO';
+  const loadTodo = useCallback(async (currentPage, ft = 'all') => {
     try {
-      loadingAction(action);
       let url = `http://localhost:3000/todoList?_page=${currentPage}&_per_page=${perPageItem}`;
 
       if (ft !== 'all') {
@@ -381,17 +355,13 @@ function Home() {
       setTotalPages(json.pages);
       setPage(currentPage);
       setFilterType(ft);
-      setApiStatus(val => val.filter(x => x.action !== action));
     } catch (error) {
-      errorAction(action, error.message);
+      console.log(error);
     }
-  };
+  }, []);
 
-  const addTodo = async e => {
-    const action = 'ADD_TODO';
+  const addTodo = useCallback(async e => {
     try {
-      loadingAction(action);
-
       e.preventDefault();
       const input = inputRef.current;
 
@@ -412,18 +382,15 @@ function Home() {
       const json = await res.json();
 
       setTodoList(val => [...val, json]);
-      setApiStatus(val => val.filter(x => x.action !== action));
 
       input.value = '';
     } catch (error) {
-      errorAction(action, error.message);
+      console.log(error);
     }
-  };
+  }, []);
 
-  const editTodo = async item => {
-    const action = 'EDIT_TODO';
+  const editTodo = useCallback(async item => {
     try {
-      loadingAction(action, item.id);
       const res = await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'PUT',
         body: JSON.stringify(item),
@@ -439,19 +406,13 @@ function Home() {
         const index = val.findIndex(x => x.id === item.id);
         return [...val.slice(0, index), json, ...val.slice(index + 1)];
       });
-
-      setEditMode('');
-
-      successAction(item.id, action);
     } catch (error) {
-      errorAction(item.id, action, error.message);
+      console.log(error);
     }
-  };
+  }, []);
 
-  const deleteTodo = async item => {
-    const action = 'DELETE_TODO';
+  const deleteTodo = useCallback(async item => {
     try {
-      loadingAction(action, item.id);
       await fetch(`http://localhost:3000/todoList/${item.id}`, {
         method: 'DELETE',
       });
@@ -460,168 +421,31 @@ function Home() {
         const index = val.findIndex(x => x.id === item.id);
         return [...val.slice(0, index), ...val.slice(index + 1)];
       });
-
-      successAction(item.id, action);
     } catch (error) {
-      errorAction(item.id, action, error.message);
+      console.log(error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     loadTodo(1, 'all');
   }, []);
 
-  useEffect(() => {
-    if (editMode && editRef.current) {
-      console.log(editMode);
-
-      editRef.current.value = todoList.find(x => x.id === editMode)?.text;
-    }
-  }, [editMode]);
-
-  const loadTodoAction = apiStatus.find(x => x.action === 'LOAD_TODO');
-  const addTodoAction = apiStatus.find(x => x.action === 'ADD_TODO');
-
-  if (loadTodoAction?.status === 'loading') {
-    return <p>Loading....</p>;
-  }
-
-  if (loadTodoAction?.status === 'error') {
-    return <p>{loadTodoAction.message}</p>;
-  }
-
   return (
     <div className="flex flex-col items-center gap-4 h-screen">
       <h1>Todo App</h1>
-      <form onSubmit={addTodo} className="flex w-full max-w-sm items-center">
-        <Input ref={inputRef} className="rounded-r-none" required />
-        <Button
-          type="submit"
-          className="rounded-l-none"
-          disabled={addTodoAction?.status === 'loading'}
-        >
-          {addTodoAction?.status === 'loading' && (
-            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-          )}
-          Button
-        </Button>
-      </form>
-      {addTodoAction?.status === 'error' && (
-        <p className="text-red-500">{addTodoAction?.message}</p>
-      )}
-      <div className="flex flex-col gap-6 w-full p-6 flex-1">
-        {todoList.map(x => (
-          <div key={x.id} className="flex items-center">
-            <Checkbox
-              checked={x.isDone}
-              disabled={apiStatus.some(
-                y =>
-                  (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
-                  y.status === 'loading' &&
-                  y.id === x.id,
-              )}
-              onCheckedChange={() => editTodo({ ...x, isDone: !x.isDone })}
-            />
-            {editMode === x.id ? (
-              <form
-                className="flex-1 mx-4 flex gap-4"
-                onSubmit={e => {
-                  e.preventDefault();
-                  editTodo({
-                    ...x,
-                    text: editRef.current.value,
-                  });
-                }}
-              >
-                <Input className="flex-1" ref={editRef} />
-                <BorderButton
-                  type="submit"
-                  borderRadius="1.75rem"
-                  className="bg-white dark:bg-slate-900 text-black dark:text-white border-neutral-200 dark:border-slate-800"
-                  onClick={() => setEditMode(x.id)}
-                >
-                  Submit
-                </BorderButton>
-              </form>
-            ) : (
-              <p className={`flex-1 px-4${x.isDone ? ' line-through' : ''}`}>
-                {x.text}
-              </p>
-            )}
-
-            <Button
-              type="button"
-              className="mx-4"
-              disabled={apiStatus.some(
-                y =>
-                  (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
-                  y.status === 'loading' &&
-                  y.id === x.id,
-              )}
-              onClick={() => {
-                setEditMode(x.id);
-                console.log(editRef.current);
-                // editRef.current.value = x.text;
-              }}
-            >
-              Edit
-            </Button>
-            <ConfirmDelete onClick={() => deleteTodo(x)}>
-              <Button
-                disabled={apiStatus.some(
-                  y =>
-                    (y.action === 'EDIT_TODO' || y.action === 'DELETE_TODO') &&
-                    y.status === 'loading' &&
-                    y.id === x.id,
-                )}
-              >
-                Delete
-              </Button>
-            </ConfirmDelete>
-          </div>
-        ))}
-        <Button
-          disabled={page >= totalPages}
-          onClick={() => loadTodo(page + 1, filterType)}
-        >
-          Next
-        </Button>
-        <Button
-          onClick={() => loadTodo(page - 1, filterType)}
-          disabled={page <= 1}
-        >
-          Previous
-        </Button>
-        <Toaster />
-      </div>
-      <div className="flex w-full">
-        <Button
-          className="flex-1 rounded-none"
-          variant={filterType === 'all' ? 'destructive' : 'default'}
-          onClick={() => loadTodo(page, 'all')}
-        >
-          All
-        </Button>
-        <Button
-          className="flex-1 rounded-none"
-          variant={filterType === 'pending' ? 'destructive' : 'default'}
-          onClick={() => loadTodo(1, 'pending')}
-        >
-          Pending
-        </Button>
-        <Button
-          className="flex-1 rounded-none"
-          variant={filterType === 'completed' ? 'destructive' : 'default'}
-          onClick={() => loadTodo(1, 'completed')}
-        >
-          Completed
-        </Button>
-      </div>
-      {/* {error && (
-          <div className="absolute top-4 right-4 bg-red-400 p-4 rounded-md text-white">
-            {error}
-          </div>
-        )} */}
+      <TodoForm addTodo={addTodo} ref={inputRef} />
+      <TodoList
+        todoList={todoList}
+        editTodo={editTodo}
+        deleteTodo={deleteTodo}
+      />
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        filterType={filterType}
+        loadTodo={loadTodo}
+      />
+      <TodoFilter loadTodo={loadTodo} filterType={filterType} page={page} />
     </div>
   );
 }

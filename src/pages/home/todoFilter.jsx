@@ -1,31 +1,37 @@
-import { Button } from '@/components/ui/button';
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@/components/ui/button';
 
-function TodoFilter({ filterType, loadTodo, page }) {
-  console.log('TodoFilter render');
+function TodoFilter({ loadTodo, filterType }) {
+  const onFilter = useCallback(e => {
+    loadTodo(e.target.getAttribute('data-type'));
+  }, []);
+
   return (
-    <div className="flex w-full">
+    <div className="flex">
       <Button
         className="flex-1 rounded-none"
+        data-type="all"
         variant={filterType === 'all' ? 'destructive' : 'default'}
-        onClick={() => loadTodo(page, 'all')}
+        onClick={onFilter}
       >
-        All
+        ALL
       </Button>
       <Button
         className="flex-1 rounded-none"
+        data-type="pending"
         variant={filterType === 'pending' ? 'destructive' : 'default'}
-        onClick={() => loadTodo(1, 'pending')}
+        onClick={onFilter}
       >
-        Pending
+        PENDING
       </Button>
       <Button
         className="flex-1 rounded-none"
+        data-type="completed"
         variant={filterType === 'completed' ? 'destructive' : 'default'}
-        onClick={() => loadTodo(1, 'completed')}
+        onClick={onFilter}
       >
-        Completed
+        COMPLETED
       </Button>
     </div>
   );
@@ -33,8 +39,6 @@ function TodoFilter({ filterType, loadTodo, page }) {
 
 TodoFilter.propTypes = {
   loadTodo: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
   filterType: PropTypes.oneOf(['all', 'pending', 'completed']).isRequired,
 };
-
 export default memo(TodoFilter);

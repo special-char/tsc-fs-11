@@ -2,16 +2,16 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import TodoItem from './todoItem';
 
-function TodoList({ todoList, editTodo, deleteTodo }) {
+function TodoList({ data, onUpdateTodo, onDeleteTodo }) {
   console.log('TodoList render');
   return (
-    <div className="flex flex-col gap-6 w-full p-6 flex-1">
-      {todoList.map(x => (
+    <div className="flex-1">
+      {data.map(item => (
         <TodoItem
-          key={x.id}
-          editTodo={editTodo}
-          deleteTodo={deleteTodo}
-          todoItem={x}
+          key={item.id}
+          item={item}
+          onUpdateTodo={onUpdateTodo}
+          onDeleteTodo={onDeleteTodo}
         />
       ))}
     </div>
@@ -19,15 +19,15 @@ function TodoList({ todoList, editTodo, deleteTodo }) {
 }
 
 TodoList.propTypes = {
-  todoList: PropTypes.arrayOf(
+  data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       text: PropTypes.string.isRequired,
       isDone: PropTypes.bool.isRequired,
     }).isRequired,
   ).isRequired,
-  editTodo: PropTypes.func.isRequired,
-  deleteTodo: PropTypes.func.isRequired,
+  onUpdateTodo: PropTypes.func.isRequired,
+  onDeleteTodo: PropTypes.func.isRequired,
 };
 
 export default memo(TodoList);

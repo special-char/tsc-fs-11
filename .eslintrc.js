@@ -34,5 +34,6 @@ module.exports = {
   rules: {
     'import/no-extraneous-dependencies': 0,
     'react/state-in-constructor': 0,
+    'jsx-a11y/label-has-associated-control': 0,
   },
 };

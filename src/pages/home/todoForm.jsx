@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import TodoContext from '../../context/todoContext';
 
 function TodoForm({ onAddTodo }) {
   console.log('TodoForm render');
@@ -45,6 +46,20 @@ function TodoForm({ onAddTodo }) {
       <Button type="submit" className="rounded-l-none">
         Add Todo
       </Button>
+      <TodoContext.Consumer>
+        {({ toggleTheme }) => {
+          console.log('TodoForm render toggleTheme');
+          return (
+            <Button
+              type="button"
+              className="rounded-l-none"
+              onClick={toggleTheme}
+            >
+              Toggle Theme
+            </Button>
+          );
+        }}
+      </TodoContext.Consumer>
     </form>
   );
 }

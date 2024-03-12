@@ -10,6 +10,7 @@ import DashboardLayout from './layout/dashboardLayout';
 import Products from './pages/products';
 import ProductDetails from './pages/productDetails';
 import TickTack from './pages/tickTack';
+import { TodoProvider } from './context/todoContext';
 
 // Clear the existing HTML content
 document.body.innerHTML = '<div id="app"></div>';
@@ -21,7 +22,11 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: (
+          <TodoProvider>
+            <Home />
+          </TodoProvider>
+        ),
       },
       {
         path: 'ticktock',

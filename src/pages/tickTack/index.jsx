@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
 import React, { PureComponent } from 'react';
+import { Button } from '@/components/ui/button';
+import TodoContext from '../../context/todoContext';
 
 export default class TickTack extends PureComponent {
   state = {
@@ -16,6 +17,9 @@ export default class TickTack extends PureComponent {
     const { isStarted, data } = this.state;
     return (
       <div>
+        <TodoContext.Consumer>
+          {data => <h1>{data?.theme}</h1>}
+        </TodoContext.Consumer>
         {isStarted ? (
           <div>
             <h1>Tick Tack Toe started</h1>

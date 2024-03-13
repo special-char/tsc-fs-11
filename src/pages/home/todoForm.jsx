@@ -1,35 +1,11 @@
-import React, { memo, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import TodoContext from '../../context/todoContext';
+import { useTodo } from '../../context/todoContext';
 
-function TodoForm({ onAddTodo }) {
-  console.log('TodoForm render');
-  const inputRef = useRef();
-
-  const addTodo = async e => {
-    try {
-      e.preventDefault();
-      const res = await fetch('http://localhost:3000/todoList', {
-        method: 'POST',
-        body: JSON.stringify({
-          isDone: false,
-          text: inputRef.current.value,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-      const json = await res.json();
-      onAddTodo(json);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+function TodoForm() {
+  const { addTodo, inputRef, loading } = useTodo();
   return (
     <form className="flex mx-auto my-4" onSubmit={addTodo}>
       <div>
@@ -43,29 +19,15 @@ function TodoForm({ onAddTodo }) {
           className="rounded-r-none"
         />
       </div>
-      <Button type="submit" className="rounded-l-none">
+      <Button
+        type="submit"
+        className="rounded-l-none disabled:bg-slate-300 disabled:cursor-wait"
+        disabled={loading}
+      >
         Add Todo
       </Button>
-      <TodoContext.Consumer>
-        {({ toggleTheme }) => {
-          console.log('TodoForm render toggleTheme');
-          return (
-            <Button
-              type="button"
-              className="rounded-l-none"
-              onClick={toggleTheme}
-            >
-              Toggle Theme
-            </Button>
-          );
-        }}
-      </TodoContext.Consumer>
     </form>
   );
 }
-
-TodoForm.propTypes = {
-  onAddTodo: PropTypes.func.isRequired,
-};
 
 export default memo(TodoForm);

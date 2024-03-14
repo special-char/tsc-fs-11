@@ -1,51 +1,6 @@
 {
   "todoList": [
     {
-      "id": "ed7b",
-      "text": "asdfadsf",
-      "isDone": true
-    },
-    {
-      "id": "5e62",
-      "text": "asdfasdf",
-      "isDone": false
-    },
-    {
-      "id": "1f4a",
-      "text": "asdfasdf",
-      "isDone": false
-    },
-    {
-      "id": "5170",
-      "text": "asdfasf",
-      "isDone": false
-    },
-    {
-      "id": "1b0e",
-      "isDone": false,
-      "text": "adfasdfdasf"
-    },
-    {
-      "id": "e795",
-      "isDone": false,
-      "text": "asdfasdf"
-    },
-    {
-      "id": "9aff",
-      "isDone": false,
-      "text": "learn react"
-    },
-    {
-      "id": "ebf9",
-      "isDone": false,
-      "text": "asdfdasf"
-    },
-    {
-      "id": "b1f5",
-      "isDone": false,
-      "text": "asdfdasfadfasdf"
-    },
-    {
       "id": "48ee",
       "isDone": false,
       "text": "asdfdasfadfasdfasdfadsf"
@@ -57,12 +12,12 @@
     },
     {
       "id": "d9a9",
-      "isDone": false,
+      "isDone": true,
       "text": "asdfasdf"
     },
     {
       "id": "f41b",
-      "isDone": false,
+      "isDone": true,
       "text": "asdfasdfd adfasfad"
     },
     {
@@ -104,6 +59,21 @@
       "id": "0326",
       "isDone": false,
       "text": "asdf"
+    },
+    {
+      "id": "c01f",
+      "isDone": false,
+      "text": "asdfasdfdas"
+    },
+    {
+      "id": "9b03",
+      "isDone": false,
+      "text": "asdfafdf"
+    },
+    {
+      "id": "5fb5",
+      "isDone": false,
+      "text": "adfasdf"
     }
   ]
 }

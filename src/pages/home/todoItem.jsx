@@ -4,17 +4,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import ConfirmDelete from '@/components/confirmDelete';
 import { useTodo } from '../../context/todoContext';
-import {
-  DELETE_TODO,
-  FAIL,
-  REQUEST,
-  UPDATE_TODO,
-} from '../../constants/actions';
+import { DELETE_TODO, UPDATE_TODO } from '../../constants/actions';
 
 function TodoItem({ item }) {
-  const { updateTodo, deleteTodo, action } = useTodo();
+  const { updateTodo, deleteTodo, loading, error } = useTodo();
 
-  const todoState = action.find(x => x.id === item.id);
+  const todoLoadingState = loading.find(x => x.id === item.id);
+  const todoErrorState = error.find(x => x.id === item.id);
 
   return (
     <>
@@ -22,26 +18,22 @@ function TodoItem({ item }) {
         <Checkbox
           className="disabled:bg-gray-300"
           onCheckedChange={() => updateTodo(item)}
-          disabled={
-            todoState?.task === UPDATE_TODO && todoState?.state === REQUEST
-          }
+          disabled={todoLoadingState?.task === UPDATE_TODO}
           checked={item.isDone}
         />
         <p className="flex-1 px-4 line-clamp-1">{item.text}</p>
 
         <ConfirmDelete onClick={() => deleteTodo(item)}>
           <Button
-            disabled={
-              todoState?.task === DELETE_TODO && todoState?.state === REQUEST
-            }
+            disabled={todoLoadingState?.task === DELETE_TODO}
             className="disabled:bg-gray-300"
           >
             Delete
           </Button>
         </ConfirmDelete>
       </div>
-      {todoState?.state === FAIL && (
-        <p className="text-red-500 text-center">{todoState.message}</p>
+      {todoErrorState && (
+        <p className="text-red-500 text-center">{todoErrorState.message}</p>
       )}
     </>
   );

@@ -6,9 +6,11 @@ import { useTodo } from '../../context/todoContext';
 import { ADD_TODO } from '../../constants/actions';
 
 function TodoForm() {
-  const { addTodo, inputRef, action } = useTodo();
+  const { addTodo, inputRef, loading, error } = useTodo();
 
-  const addTodoState = action.find(x => x.task === ADD_TODO);
+  const isLoading = loading.some(x => x.task === ADD_TODO);
+
+  const hasError = error.find(x => x.task === ADD_TODO);
 
   return (
     <>
@@ -27,13 +29,13 @@ function TodoForm() {
         <Button
           type="submit"
           className="rounded-l-none disabled:bg-slate-300 disabled:cursor-wait"
-          disabled={addTodoState?.state === 'LOADING'}
+          disabled={isLoading}
         >
           Add Todo
         </Button>
       </form>
-      {addTodoState?.state === 'ERROR' && (
-        <p className="text-red-500 text-center">{addTodoState.message}</p>
+      {hasError && (
+        <p className="text-red-500 text-center">{hasError.message}</p>
       )}
     </>
   );

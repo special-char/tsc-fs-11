@@ -1,16 +1,6 @@
 {
   "todoList": [
     {
-      "id": "48ee",
-      "isDone": false,
-      "text": "asdfdasfadfasdfasdfadsf"
-    },
-    {
-      "id": "8686",
-      "isDone": false,
-      "text": "adfafa"
-    },
-    {
       "id": "d9a9",
       "isDone": true,
       "text": "asdfasdf"
@@ -74,6 +64,11 @@
       "id": "5fb5",
       "isDone": false,
       "text": "adfasdf"
+    },
+    {
+      "id": "07d3",
+      "isDone": false,
+      "text": "adsdfasfd"
     }
   ]
 }

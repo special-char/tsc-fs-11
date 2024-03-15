@@ -3,6 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 // import { Toaster } from '@/components/ui/sonner';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import './style.css';
 import Home from './pages/home';
 import About from './pages/about';
@@ -190,6 +191,8 @@ root.render(
   <>
     {/* <WrappedApp /> */}
     {/* <WrappedTest /> */}
-    <RouterProvider router={router} />
+    <ErrorBoundary>
+      <RouterProvider router={router} />
+    </ErrorBoundary>
   </>,
 );

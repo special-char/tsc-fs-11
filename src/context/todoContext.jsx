@@ -7,6 +7,9 @@ import React, {
   useReducer,
   useRef,
 } from 'react';
+import PropTypes from 'prop-types';
+// eslint-disable-next-line import/no-unresolved
+import { toast } from 'sonner';
 import {
   ADD_TODO,
   DELETE_TODO,
@@ -69,6 +72,8 @@ export function TodoProvider({ children }) {
         },
       });
     } catch (error) {
+      toast('Event has been created.');
+
       dispatch({
         type: `${LOAD_TODO}_${FAIL}`,
         payload: {
@@ -100,6 +105,7 @@ export function TodoProvider({ children }) {
       });
       inputRef.current.value = '';
     } catch (error) {
+      toast('Add Todo List Fail');
       dispatch({
         type: `${ADD_TODO}_${FAIL}`,
         payload: { errorPayload: error },
@@ -174,5 +180,9 @@ export function TodoProvider({ children }) {
 
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 }
+
+TodoProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export const useTodo = () => useContext(TodoContext);

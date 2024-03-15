@@ -7,35 +7,28 @@ import { useTodo } from '../../context/todoContext';
 import { DELETE_TODO, UPDATE_TODO } from '../../constants/actions';
 
 function TodoItem({ item }) {
-  const { updateTodo, deleteTodo, loading, error } = useTodo();
-
+  const { updateTodo, deleteTodo, loading } = useTodo();
   const todoLoadingState = loading.find(x => x.id === item.id);
-  const todoErrorState = error.find(x => x.id === item.id);
 
   return (
-    <>
-      <div className="flex items-center m-4">
-        <Checkbox
-          className="disabled:bg-gray-300"
-          onCheckedChange={() => updateTodo(item)}
-          disabled={todoLoadingState?.task === UPDATE_TODO}
-          checked={item.isDone}
-        />
-        <p className="flex-1 px-4 line-clamp-1">{item.text}</p>
+    <div className="flex items-center m-4">
+      <Checkbox
+        className="disabled:bg-gray-300"
+        onCheckedChange={() => updateTodo(item)}
+        disabled={todoLoadingState?.task === UPDATE_TODO}
+        checked={item.isDone}
+      />
+      <p className="flex-1 px-4 line-clamp-1">{item.text}</p>
 
-        <ConfirmDelete onClick={() => deleteTodo(item)}>
-          <Button
-            disabled={todoLoadingState?.task === DELETE_TODO}
-            className="disabled:bg-gray-300"
-          >
-            Delete
-          </Button>
-        </ConfirmDelete>
-      </div>
-      {todoErrorState && (
-        <p className="text-red-500 text-center">{todoErrorState.message}</p>
-      )}
-    </>
+      <ConfirmDelete onClick={() => deleteTodo(item)}>
+        <Button
+          disabled={todoLoadingState?.task === DELETE_TODO}
+          className="disabled:bg-gray-300"
+        >
+          Delete
+        </Button>
+      </ConfirmDelete>
+    </div>
   );
 }
 

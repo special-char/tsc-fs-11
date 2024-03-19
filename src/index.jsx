@@ -12,6 +12,8 @@ import Products from './pages/products';
 import ProductDetails from './pages/productDetails';
 import TickTack from './pages/tickTack';
 import { TodoProvider } from './context/todoContext';
+import AuthLayout from './layout/authLayout';
+import Register from './pages/register';
 
 // Clear the existing HTML content
 document.body.innerHTML = '<div id="app"></div>';
@@ -46,6 +48,16 @@ const router = createBrowserRouter([
       {
         path: 'about',
         element: <About />,
+      },
+    ],
+  },
+  {
+    path: '/auth',
+    element: <AuthLayout />,
+    children: [
+      {
+        index: true,
+        element: <Register />,
       },
     ],
   },

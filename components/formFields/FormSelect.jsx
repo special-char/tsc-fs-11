@@ -18,14 +18,14 @@ import {
   FormMessage,
 } from '../ui/form';
 
-function FormSelect({ field, options, desc, label }) {
+function FormSelect({ field, options, desc, label, placeholder }) {
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
       <Select onValueChange={field.onChange} defaultValue={field.value}>
         <FormControl>
           <SelectTrigger>
-            <SelectValue placeholder="Select a verified email to display" />
+            <SelectValue placeholder={placeholder} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>

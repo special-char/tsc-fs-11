@@ -8,12 +8,17 @@ import {
   FormMessage,
 } from '../ui/form';
 
-function FormInput({ label, desc, field }) {
+function FormInput({ label, desc, field, className, inputStyle, ...props }) {
   return (
-    <FormItem>
+    <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
       <FormControl>
-        <Input placeholder="shadcn" {...field} />
+        <Input
+          placeholder="shadcn"
+          {...field}
+          {...props}
+          className={inputStyle}
+        />
       </FormControl>
       {desc && <FormDescription>{desc}</FormDescription>}
       <FormMessage />

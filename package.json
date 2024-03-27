@@ -8,7 +8,7 @@
     "build": "webpack",
     "start": "webpack serve",
     "prepare": "husky install",
-    "start:server": "json-server db.json"
+    "start:server": "json-server-auth db.json"
   },
   "keywords": [
     "abc",
@@ -72,6 +72,7 @@
     "html-webpack-plugin": "^5.6.0",
     "husky": "^8.0.0",
     "json-server": "^1.0.0-alpha.23",
+    "json-server-auth": "^2.1.0",
     "lint-staged": "^15.2.0",
     "postcss": "^8.4.33",
     "postcss-easings": "^4.0.0",

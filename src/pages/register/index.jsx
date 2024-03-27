@@ -1,161 +1,120 @@
 import FormInput from '@/components/formFields/FormInput';
-import FormRadioGroup from '@/components/formFields/FormRadioGroup';
-import FormSelect from '@/components/formFields/FormSelect';
-import FormCheckboxInput from '@/components/formFields/FormCheckboxInput';
-import { Button } from '@/components/ui/button';
 import { Form, FormField } from '@/components/ui/form';
 import React, { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import FormComboBox from '@/components/formFields/FormComboBox';
-import FormDatePicker from '@/components/formFields/FormDatePicker';
-
-const wait = time => new Promise(resolve => setTimeout(resolve, time));
-
-// switch
-// slider
-// otp
-// textarea
 
 const fields = [
   {
-    id: 'firstName',
-    label: 'First Name',
-    name: 'firstName',
-    placeholder: 'Yagnesh',
+    id: 'name',
+    label: 'Name',
+    name: 'name',
+    placeholder: 'Elon Musk',
+    autoComplete: 'name',
     component: FormInput,
-  },
-  {
-    id: 'lastName',
-    name: 'lastName',
-    label: 'Last Name',
-    placeholder: 'Modh',
-    component: FormInput,
+    rules: {
+      required: {
+        value: true,
+        message: 'Name is required...',
+      },
+    },
   },
   {
     id: 'email',
     name: 'email',
     label: 'Email',
-    className: 'col-span-2',
-    inputStyle: 'border-red-400',
-    placeholder: 'yagnesh.modh@gmai.com',
+    placeholder: 'elon.musk@tesla.com',
+    type: 'email',
+    autoComplete: 'email',
     component: FormInput,
+    rules: {
+      required: {
+        value: true,
+        message: 'Name is required...',
+      },
+      pattern: {
+        value: /\S+@\S+\.\S+/,
+        message: 'Entered value does not match email format',
+      },
+    },
   },
   {
     id: 'password',
     name: 'password',
     label: 'Password',
-    placeholder: 'strong password',
+    placeholder: 'Some strong Password',
     type: 'password',
+    autoComplete: 'new-password',
     component: FormInput,
+    rules: {
+      required: {
+        value: true,
+        message: 'Name is required...',
+      },
+    },
   },
   {
-    id: 'birthDate',
-    name: 'birthDate',
-    label: 'Birth Date',
-    placeholder: 'strong password',
-    component: FormDatePicker,
-  },
-  {
-    id: 'gender',
-    label: 'Gender',
-    name: 'gender',
-    placeholder: 'Please Select Gender',
-    options: [
-      {
-        value: 'male',
-        text: 'Male',
+    id: 'confirm-password',
+    name: 'confirmPassword',
+    label: 'Confirm Password',
+    placeholder: 'same as password',
+    type: 'password',
+    autoComplete: 'new-password',
+    component: FormInput,
+    rules: {
+      required: {
+        value: true,
+        message: 'Name is required...',
       },
-      {
-        value: 'female',
-        text: 'Female',
+      compare: {
+        value: 'password',
+        message: 'Password and confirmPassword should same',
       },
-    ],
-    component: FormSelect,
-  },
-  {
-    id: 'genderRadio',
-    label: 'Gender',
-    name: 'genderRadio',
-    placeholder: 'Please Select Gender',
-    options: [
-      {
-        value: 'male',
-        text: 'Male',
-      },
-      {
-        value: 'female',
-        text: 'Female',
-      },
-    ],
-    component: FormRadioGroup,
-  },
-  {
-    id: 'genderCheckbox',
-    label: 'Gender',
-    name: 'genderCheckbox',
-    placeholder: 'Please Select Gender',
-    options: [
-      {
-        value: 'male',
-        text: 'Male',
-      },
-      {
-        value: 'female',
-        text: 'Female',
-      },
-    ],
-    component: FormCheckboxInput,
-  },
-  {
-    id: 'genderCombo',
-    label: 'Gender',
-    name: 'genderCombo',
-    placeholder: 'Please Select Gender',
-    options: [
-      {
-        value: 'male',
-        text: 'Male',
-      },
-      {
-        value: 'female',
-        text: 'Female',
-      },
-    ],
-    component: FormComboBox,
+    },
   },
 ];
 
 function Register() {
   const form = useForm({
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      name: '',
       email: '',
       password: '',
-      genderCheckbox: [],
+      confirmPassword: '',
     },
+    mode: 'all',
   });
 
   const onSubmit = useCallback(async value => {
-    await wait(5000);
     console.log(value);
   }, []);
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-2 gap-2"
-      >
-        {fields.map(({ component: Component, name, ...props }) => (
-          <FormField
-            key={name}
-            control={form.control}
-            name={name}
-            render={({ field }) => <Component field={field} {...props} />}
-          />
-        ))}
-        <Button type="submit">Register</Button>
+      <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+        {fields.map(({ component: Component, name, rules, ...props }) => {
+          const { compare, ...customRules } = rules;
+          if (compare) {
+            customRules.validate = val =>
+              val === form.getValues(rules.compare.value);
+          }
+          return (
+            <FormField
+              key={name}
+              control={form.control}
+              name={name}
+              render={({ field }) => <Component field={field} {...props} />}
+              rules={customRules}
+            />
+          );
+        })}
+        <div>
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            Sign in
+          </button>
+        </div>
       </form>
     </Form>
   );
